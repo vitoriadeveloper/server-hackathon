@@ -8,8 +8,7 @@ app.get("/", (req, res) => {
     res.send("Olá mundo");
 });
 
-const conn = require("../db/conn");
-
+const conn = require("./db/conn");
 conn();
 
 const routes = require("./routes");
