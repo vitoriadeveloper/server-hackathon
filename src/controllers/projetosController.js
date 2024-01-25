@@ -16,12 +16,12 @@ const projetosController = {
 
             res.status(201).json({
                 projetoCriado,
-                msg: "Projeto criado com sucesso.",
+                message: "Projeto criado com sucesso.",
             });
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                msg: "Ocorreu um erro ao processar a requisição.",
+                message: "Ocorreu um erro ao processar a requisição.",
             });
         }
     },
