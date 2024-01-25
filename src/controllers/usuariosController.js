@@ -3,6 +3,8 @@ const { z } = require("zod");
 const Usuario = require("../models/Usuarios");
 const { now } = require("mongoose");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const usuarioController = {
     create: async (req, res) => {
@@ -85,6 +87,44 @@ const usuarioController = {
                 message: "Erro interno do servidor",
             });
         }
+    },
+    loginComGoogle: async (req, res) => {
+        const { googleToken } = req.body;
+        try {
+            const ticket = await client.verifyIdToken({
+                idToken: googleToken,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            const payload = ticket.getPayload();
+            const { email, sub: googleUserId } = payload;
+
+            let usuarioEncontrado = await Usuario.findOne({ email });
+
+            if (!usuarioEncontrado) {
+                usuarioEncontrado = await Usuario.findOne({ googleUserId });
+            }
+            if (!usuarioEncontrado) {
+                const novoUsuario = new Usuario({
+                    nome: payload.given_name,
+                    sobrenome: payload.family_name,
+                    email,
+                    googleUserId,
+                    createdAt: new Date(now()),
+                });
+
+                await Usuario.create(novoUsuario);
+                usuarioEncontrado = novoUsuario;
+            }
+            const token = jwt.sign(
+                { id: usuarioEncontrado.id },
+                process.env.SECURE_PASSWORD,
+                {
+                    expiresIn: "1h",
+                },
+            );
+
+            return res.status(200).json({ token });
+        } catch (error) {}
     },
 };
 

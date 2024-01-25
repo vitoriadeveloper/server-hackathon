@@ -21,7 +21,12 @@ const usuarioSchema = new Schema(
         },
         senha_hash: {
             type: String,
-            required: true,
+            required: false,
+        },
+        googleUserId: {
+            type: String,
+            required: false,
+            unique: true,
         },
         projetos: {
             type: [projetoSchema],
