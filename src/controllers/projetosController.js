@@ -1,6 +1,5 @@
 const { z } = require("zod");
 const { Projeto } = require("../models/Projetos");
-const { $where } = require("../models/Usuarios");
 
 const projetosController = {
     create: async (req, res) => {
@@ -106,7 +105,35 @@ const projetosController = {
                 },
             );
             return res.status(201).json();
-        } catch (error) {}
+        } catch (error) {
+            res.status(500).json({
+                message: "Erro interno do servidor.",
+            });
+        }
+    },
+    delete: async (req, res) => {
+        const {
+            0: { _id: idUsuarioLogado },
+        } = req.usuarioLogado;
+        const { id: projetoId } = req.params;
+        try {
+            const buscarProjeto = await Projeto.find({ _id: projetoId });
+
+            if (
+                buscarProjeto[0].usuario_id.toString() !==
+                idUsuarioLogado.toString()
+            ) {
+                return res.status(403).json({
+                    message: "Você não tem permissão para deletar este projeto",
+                });
+            }
+            await Projeto.deleteOne({ _id: projetoId });
+            return res.status(200).json();
+        } catch (error) {
+            res.status(500).json({
+                message: "Erro interno do servidor.",
+            });
+        }
     },
 };
 
