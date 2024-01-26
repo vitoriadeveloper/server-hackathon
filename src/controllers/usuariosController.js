@@ -34,6 +34,7 @@ const usuarioController = {
                 sobrenome,
                 email,
                 senha_hash: senha,
+                googleUserId: email,
                 createdAt: new Date(now()),
             });
 
