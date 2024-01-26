@@ -1,5 +1,6 @@
 const { z } = require("zod");
 const { Projeto } = require("../models/Projetos");
+const { $where } = require("../models/Usuarios");
 
 const projetosController = {
     create: async (req, res) => {
@@ -63,6 +64,49 @@ const projetosController = {
                 message: "Erro interno do servidor.",
             });
         }
+    },
+    put: async (req, res) => {
+        const projetosSchema = z.object({
+            titulo: z.string().max(100),
+            tags: z.array(z.string()),
+            link: z.string(),
+            descricao: z.string().max(300),
+            imagem_url: z.string(),
+        });
+        const {
+            0: { _id: idUsuarioLogado },
+        } = req.usuarioLogado;
+        const { id: projetoId } = req.params;
+        const { titulo, tags, link, descricao, imagem_url } =
+            projetosSchema.parse(req.body);
+
+        if (!projetoId) {
+            return res
+                .status(403)
+                .json({ mensagem: "Id de produto não fornecido" });
+        }
+        if (!titulo || !tags || !link || !descricao || !imagem_url) {
+            return res
+                .status(400)
+                .json({ message: "Todos os campos devem ser preenchidos" });
+        }
+        try {
+            const buscarProjeto = await Projeto.find({ _id: projetoId });
+
+            if (!buscarProjeto) {
+                return res.status(400).json({
+                    message: "Projeto não localizado na base de dados",
+                });
+            }
+
+            await Projeto.updateOne(
+                { usuario_id: idUsuarioLogado },
+                {
+                    $set: { titulo, tags, link, descricao, imagem_url },
+                },
+            );
+            return res.status(201).json();
+        } catch (error) {}
     },
 };
 

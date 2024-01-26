@@ -9,5 +9,8 @@ router.route("/").get((req, res) => projetosController.get(req, res));
 router
     .route("/meus-projetos")
     .get((req, res) => projetosController.getMyProjects(req, res));
+router
+    .route("/meus-projetos/:id")
+    .put((req, res) => projetosController.put(req, res));
 
 module.exports = router;
