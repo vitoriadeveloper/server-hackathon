@@ -27,6 +27,7 @@ const usuarioSchema = new Schema(
             type: String,
             required: false,
             unique: true,
+            sparse: true,
         },
         projetos: {
             type: [projetoSchema],

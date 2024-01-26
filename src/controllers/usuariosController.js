@@ -17,7 +17,7 @@ const usuarioController = {
             }),
         });
         try {
-            const { email, nome, sobrenome, senha_hash } = usuarioSchema.parse(
+            const { nome, sobrenome, email, senha_hash } = usuarioSchema.parse(
                 req.body,
             );
 
