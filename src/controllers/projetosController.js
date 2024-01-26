@@ -49,6 +49,21 @@ const projetosController = {
             });
         }
     },
+    getMyProjects: async (req, res) => {
+        try {
+            const {
+                0: { _id: idUsuarioLogado },
+            } = req.usuarioLogado;
+            const listarMeusProjetos = await Projeto.find({
+                usuario_id: idUsuarioLogado,
+            });
+            return res.status(200).json(listarMeusProjetos);
+        } catch (error) {
+            res.status(500).json({
+                message: "Erro interno do servidor.",
+            });
+        }
+    },
 };
 
 module.exports = projetosController;
