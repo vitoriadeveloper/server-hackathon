@@ -2,8 +2,6 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
-const { projetoSchema } = require("./Projetos");
-
 const usuarioSchema = new Schema(
     {
         nome: {
@@ -26,9 +24,6 @@ const usuarioSchema = new Schema(
         googleUserId: {
             type: String,
             required: false,
-        },
-        projetos: {
-            type: [projetoSchema],
         },
     },
     { timestamps: true },
