@@ -26,8 +26,6 @@ const usuarioSchema = new Schema(
         googleUserId: {
             type: String,
             required: false,
-            unique: true,
-            sparse: true,
         },
         projetos: {
             type: [projetoSchema],
