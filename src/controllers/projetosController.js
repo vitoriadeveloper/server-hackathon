@@ -34,9 +34,18 @@ const projetosController = {
             });
             return res.status(201).json();
         } catch (error) {
-            console.log(error);
             res.status(500).json({
-                message: "Ocorreu um erro ao processar a requisição.",
+                message: "Erro interno do servidor.",
+            });
+        }
+    },
+    get: async (req, res) => {
+        try {
+            const listarProjetos = await Projeto.find();
+            return res.status(200).json(listarProjetos);
+        } catch (error) {
+            res.status(500).json({
+                message: "Erro interno do servidor.",
             });
         }
     },
