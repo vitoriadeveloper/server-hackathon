@@ -1,0 +1,13 @@
+{
+    "type": "service_account",
+    "project_id": "hackathon-fcamara-f0e3e",
+    "private_key_id": "bd6237d65e393fe9ba5af0a407eec59208cd6405",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCYwnQigKhYgeof\nnccJlweR2ajVVI/s9ZOlrJ7C9XDsAS1v/Feg/gZBSRCno5OVOrLCChCDBmZoRnRv\nqVayke1BJYhrPrFNdzgSqyN1oo6TT9psbEeKn0S3vEFHcO2u5okZHrpFY1vizRJ3\n3dLVvSAFTtI6bbsywbbk2IhfwplrQohfQZoClee58RKhXcOAg1z29un1vYkl0xKx\ndaoi58CBHLyTWhuF3c2gt+nhHHy5FA2Rn2kSkB+U4ZxDUCpll+XP7WU3/8Zgo/TE\nrsHGt+L2sXLsFVJRqiDEy8q/0PSxPSNFHw4Ruk2ofNPNnIb+qAF8+tNkrmCQryrk\nPqFsNNUtAgMBAAECggEAMzbeYMLpreLAb6EiHeD4tLlYlU0og7VBrwXUpGBNX5J1\nfVoItvzzc+ffIZUB4cIwNEXTi1oV81fLqbQIUQ4DkRfYSLxYDTSvI/MkjEfXrSPU\ngw06XwtOqpr+98iwpza7OCTJJoJNSBig3HcOPIKPvbfTW6t2W2n+u3KtJg3ECeVb\ntcWD5TMe3APKepuV8RuIPyd+DggZ10owwj+N2IFeaVrI7jqosCIou9lnyA+eP1E6\nVKSIM3bSntaDX4BCISV2WgzhlJRGKHLaLEwPHaAIRAHCMelzi6LsVWyrlth+n6FP\nIWHFFmr7lFN7CK9Rpzo71Ix/40iJJqZOhSxp7rrFMQKBgQDQDudysCq7fQ4l383E\ncH8oglE2JgRywez83+JV9lSeCv3Hz8oIF9iLeymqe3UmHcEmavxn4Wcol15EMVJP\nDSiaPqxqG9gBV1+ONMYKtp+Mia6BQcL49RpQRQpB/6CSbW06tfk8VGALCY60S/SX\n6cxwWDs9J85TWkuq1aJeFWgpbwKBgQC79Y1Cdf1THcUpdESJbI5rO0ejzufVYjh7\nXYamteGtIB8FzzgBaGURU/7lSwCzCVE0ud/cU+RWmprCrbPUVp818s56LyYDbnsh\ndQnnjw5vc77gGWKM8Lx2UJSMfBk0Q7g/ZivxPgcMJdynW4GBHHSgxTRrgPW3v7FR\nCfZcSFgFIwKBgDQumMP+BSmy6rp7EEulf270iFPRYyo5Eyw1JroypvRgg1f6+Ivh\nFzGceU3F2xLtQYVWLeoL8WiP1le6Gw+ymC1fbLTMOPfVJyUufUEwnoGMApVunez8\n5FWfizwUVfyDr3KbM2B7NP9vrTfxGO6E9/5xUqI6+peTPQkiva9lJRPHAoGAPEVO\nCay6EafvLA7LV2HG/V2h6EYVkxgO0og4AEc8WX5+VCeRZuop1nefubjmPYLUVlrw\nDL+d7aNf0uNOUd2A6hS03vs1bk5ED4NvLKBz2Ys8/rFFJ7qeRDYsnCvDDT5V24aQ\nuqfQLLYLXmL6UQNl5pO17m8I2+YNHtZZ+Fd+Wg8CgYB5v9h73Khx0Gtxi+k3L00w\n6v1PCPcd1LLBWQHm7f/oWJdaq4VCh/4Fwm4nS+ck+hMl0JaLT+KhiHQp9W1x5vZb\nWzdeSGtW2x6ERXKSvuE2LQb8fLrS+bCpSEGJv7fnsh5wi83mL9KcqZItzDUWJF1h\nFyLyx/8KnKbjXIoHHmt9Fg==\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-m6dj2@hackathon-fcamara-f0e3e.iam.gserviceaccount.com",
+    "client_id": "105553553720064128834",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-m6dj2%40hackathon-fcamara-f0e3e.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+  }
