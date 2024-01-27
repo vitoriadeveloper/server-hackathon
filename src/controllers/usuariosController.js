@@ -1,131 +1,131 @@
-const bcrypt = require("bcrypt");
-const { z } = require("zod");
-const Usuario = require("../models/Usuarios");
-const { now } = require("mongoose");
-const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const bcrypt = require('bcrypt')
+const { z } = require('zod')
+const Usuario = require('../models/Usuarios')
+const { now } = require('mongoose')
+const jwt = require('jsonwebtoken')
+const admin = require('firebase-admin')
+
+const serviceAccount = require('../../firebaseAdmin.json')
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+})
 
 const usuarioController = {
-    create: async (req, res) => {
-        const usuarioSchema = z.object({
-            nome: z.string(),
-            sobrenome: z.string(),
-            email: z.string().email({ message: "Email inválido" }),
-            senha_hash: z.string().min(6, {
-                message: "A senha deve conter pelo menos 6 caracteres",
-            }),
-        });
-        try {
-            const { email, nome, sobrenome, senha_hash } = usuarioSchema.parse(
-                req.body,
-            );
+  create: async (req, res) => {
+    const usuarioSchema = z.object({
+      nome: z.string(),
+      sobrenome: z.string(),
+      email: z.string().email({ message: 'Email inválido' }),
+      senha_hash: z.string().min(6, {
+        message: 'A senha deve conter pelo menos 6 caracteres',
+      }),
+    })
+    try {
+      const { email, nome, sobrenome, senha_hash } = usuarioSchema.parse(
+        req.body,
+      )
 
-            const senha = await bcrypt.hash(senha_hash, 10);
-            const checarEmail = await Usuario.findOne({ email });
+      const senha = await bcrypt.hash(senha_hash, 10)
+      const checarEmail = await Usuario.findOne({ email })
 
-            if (checarEmail) {
-                return res
-                    .status(400)
-                    .json({ message: "Email já cadastrado no sistema." });
-            }
-            const novoUsuario = new Usuario({
-                nome,
-                sobrenome,
-                email,
-                senha_hash: senha,
-                createdAt: new Date(now()),
-            });
+      if (checarEmail) {
+        return res
+          .status(400)
+          .json({ message: 'Email já cadastrado no sistema.' })
+      }
+      const novoUsuario = new Usuario({
+        nome,
+        sobrenome,
+        email,
+        senha_hash: senha,
+        createdAt: new Date(now()),
+      })
 
-            await Usuario.create(novoUsuario);
-            return res.status(201).json();
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({
-                message: "Erro interno do servidor",
-            });
-        }
-    },
-    login: async (req, res) => {
-        const usuarioLoginSchema = z.object({
-            email: z.string(),
-            senha_hash: z.string().min(6),
-        });
+      await Usuario.create(novoUsuario)
+      return res.status(201).json()
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({
+        message: 'Erro interno do servidor',
+      })
+    }
+  },
+  login: async (req, res) => {
+    const usuarioLoginSchema = z.object({
+      email: z.string(),
+      senha_hash: z.string().min(6),
+    })
 
-        try {
-            const { email, senha_hash } = usuarioLoginSchema.parse(req.body);
+    try {
+      const { email, senha_hash } = usuarioLoginSchema.parse(req.body)
 
-            const usuarioEncontrado = await Usuario.findOne({ email });
+      const usuarioEncontrado = await Usuario.findOne({ email })
 
-            if (!usuarioEncontrado) {
-                return res
-                    .status(404)
-                    .json({ message: "Email ou senha incorretos" });
-            }
-            const senhaCorreta = await bcrypt.compare(
-                senha_hash,
-                usuarioEncontrado.senha_hash,
-            );
+      if (!usuarioEncontrado) {
+        return res.status(404).json({ message: 'Email ou senha incorretos' })
+      }
+      const senhaCorreta = await bcrypt.compare(
+        senha_hash,
+        usuarioEncontrado.senha_hash,
+      )
 
-            if (!senhaCorreta) {
-                return res
-                    .status(404)
-                    .json({ message: "Email ou senha incorretos" });
-            }
+      if (!senhaCorreta) {
+        return res.status(404).json({ message: 'Email ou senha incorretos' })
+      }
 
-            const token = jwt.sign(
-                { id: usuarioEncontrado.id },
-                process.env.SECURE_PASSWORD,
-                {
-                    expiresIn: "1h",
-                },
-            );
+      const token = jwt.sign(
+        { id: usuarioEncontrado.id },
+        process.env.SECURE_PASSWORD,
+        {
+          expiresIn: '1h',
+        },
+      )
 
-            return res.status(200).json({ token });
-        } catch (error) {
-            return res.status(500).json({
-                message: "Erro interno do servidor",
-            });
-        }
-    },
-    loginComGoogle: async (req, res) => {
-        const { googleToken } = req.body;
-        try {
-            const ticket = await client.verifyIdToken({
-                idToken: googleToken,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            });
-            const payload = ticket.getPayload();
-            const { email, sub: googleUserId } = payload;
+      return res.status(200).json({ token })
+    } catch (error) {
+      return res.status(500).json({
+        message: 'Erro interno do servidor',
+      })
+    }
+  },
+  loginComGoogle: async (req, res) => {
+    const { googleToken } = req.body
+    try {
+      const decodedToken = await admin.auth().verifyIdToken(googleToken)
+      const { email, sub: googleUserId } = decodedToken
+      console.log(email, googleUserId)
 
-            let usuarioEncontrado = await Usuario.findOne({ email });
+      let usuarioEncontrado = await Usuario.findOne({ email })
 
-            if (!usuarioEncontrado) {
-                usuarioEncontrado = await Usuario.findOne({ googleUserId });
-            }
-            if (!usuarioEncontrado) {
-                const novoUsuario = new Usuario({
-                    nome: payload.given_name,
-                    sobrenome: payload.family_name,
-                    email,
-                    googleUserId,
-                    createdAt: new Date(now()),
-                });
+      if (!usuarioEncontrado) {
+        usuarioEncontrado = await Usuario.findOne({ googleUserId })
+      }
 
-                await Usuario.create(novoUsuario);
-                usuarioEncontrado = novoUsuario;
-            }
-            const token = jwt.sign(
-                { id: usuarioEncontrado.id },
-                process.env.SECURE_PASSWORD,
-                {
-                    expiresIn: "1h",
-                },
-            );
+      if (!usuarioEncontrado) {
+        const novoUsuario = new Usuario({
+          nome: decodedToken.name,
+          email,
+          googleUserId,
+          createdAt: new Date(),
+        })
 
-            return res.status(200).json({ token });
-        } catch (error) {}
-    },
-};
+        await Usuario.create(novoUsuario)
+        usuarioEncontrado = novoUsuario
+      }
 
-module.exports = usuarioController;
+      const token = jwt.sign(
+        { id: usuarioEncontrado.id },
+        process.env.SECURE_PASSWORD,
+        { expiresIn: '1h' },
+      )
+
+      return res.status(200).json({ token })
+    } catch (error) {
+      console.error('Erro ao fazer login com o Google:', error)
+      return res.status(500).json({ error: 'Erro interno do servidor' })
+    }
+  },
+}
+
+module.exports = usuarioController
