@@ -1,40 +1,40 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
-const { projetoSchema } = require('./Projetos')
+const { projetoSchema } = require("./Projetos");
 
 const usuarioSchema = new Schema(
-  {
-    nome: {
-      type: String,
-      required: true,
+    {
+        nome: {
+            type: String,
+            required: true,
+        },
+        sobrenome: {
+            type: String,
+            required: false,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        senha_hash: {
+            type: String,
+            required: false,
+        },
+        googleUserId: {
+            type: String,
+            required: false,
+            unique: true,
+        },
+        projetos: {
+            type: [projetoSchema],
+        },
     },
-    sobrenome: {
-      type: String,
-      required: false,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    senha_hash: {
-      type: String,
-      required: false,
-    },
-    googleUserId: {
-      type: String,
-      required: false,
-      unique: true,
-    },
-    projetos: {
-      type: [projetoSchema],
-    },
-  },
-  { timestamps: true },
-)
+    { timestamps: true },
+);
 
-const Usuario = mongoose.model('Usuario', usuarioSchema)
+const Usuario = mongoose.model("Usuario", usuarioSchema);
 
-module.exports = Usuario
+module.exports = Usuario;
