@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const { z } = require("zod");
 const Usuario = require("../models/Usuarios");
-const { now } = require("mongoose");
+
 const jwt = require("jsonwebtoken");
 const admin = require("firebase-admin");
 

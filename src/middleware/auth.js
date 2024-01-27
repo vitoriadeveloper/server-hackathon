@@ -15,7 +15,6 @@ const autenticacao = async (req, res, next) => {
         const usuarioLogado = await Usuario.find({
             _id: id,
         });
-
         if (!usuarioLogado) {
             return res.status(401).json({ message: "Usuário não autorizado" });
         }
