@@ -3,8 +3,13 @@ const { z } = require("zod");
 const Usuario = require("../models/Usuarios");
 const { now } = require("mongoose");
 const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const admin = require("firebase-admin");
+
+const serviceAccount = require("../../firebaseAdmin.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
 
 const usuarioController = {
     create: async (req, res) => {
@@ -92,40 +97,39 @@ const usuarioController = {
     loginComGoogle: async (req, res) => {
         const { googleToken } = req.body;
         try {
-            const ticket = await client.verifyIdToken({
-                idToken: googleToken,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            });
-            const payload = ticket.getPayload();
-            const { email, sub: googleUserId } = payload;
+            const decodedToken = await admin.auth().verifyIdToken(googleToken);
+            const { email, sub: googleUserId } = decodedToken;
+            console.log(email, googleUserId);
 
             let usuarioEncontrado = await Usuario.findOne({ email });
 
             if (!usuarioEncontrado) {
                 usuarioEncontrado = await Usuario.findOne({ googleUserId });
             }
+
             if (!usuarioEncontrado) {
                 const novoUsuario = new Usuario({
-                    nome: payload.given_name,
-                    sobrenome: payload.family_name,
+                    nome: decodedToken.name,
                     email,
                     googleUserId,
-                    createdAt: new Date(now()),
+                    createdAt: new Date(),
                 });
 
                 await Usuario.create(novoUsuario);
                 usuarioEncontrado = novoUsuario;
             }
+
             const token = jwt.sign(
                 { id: usuarioEncontrado.id },
                 process.env.SECURE_PASSWORD,
-                {
-                    expiresIn: "1h",
-                },
+                { expiresIn: "1h" },
             );
 
             return res.status(200).json({ token });
-        } catch (error) {}
+        } catch (error) {
+            console.error("Erro ao fazer login com o Google:", error);
+            return res.status(500).json({ error: "Erro interno do servidor" });
+        }
     },
 };
 
