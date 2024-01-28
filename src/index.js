@@ -1,8 +1,13 @@
 const express = require("express");
 require("dotenv").config();
+const swaggerUI = require("swagger-ui-express");
 const cors = require("cors");
+const routes = require("./routes");
 const app = express();
+const conn = require("./db/conn");
+const swaggerDocs = require("./swagger.json");
 const PORTA = 8000;
+conn();
 
 const corsOptions = {
     origin: ["http://localhost:8000", "http://localhost:5173"],
@@ -12,16 +17,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.get("/", (req, res) => {
-    res.send("Olá mundo");
-});
-
-const conn = require("./db/conn");
-conn();
-
-const routes = require("./routes");
-
 app.use("/api", routes);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);

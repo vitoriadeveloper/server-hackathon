@@ -25,7 +25,11 @@ const usuarioController = {
             const { nome, sobrenome, email, senha_hash } = usuarioSchema.parse(
                 req.body,
             );
-
+            if (senha_hash.length < 6) {
+                return res.status(401).json({
+                    message: "A senha deve conter pelo menos 6 caracteres",
+                });
+            }
             const senha = await bcrypt.hash(senha_hash, 10);
             const checarEmail = await Usuario.findOne({ email });
 
@@ -65,7 +69,7 @@ const usuarioController = {
 
             if (!usuarioEncontrado) {
                 return res
-                    .status(404)
+                    .status(401)
                     .json({ message: "Email ou senha incorretos" });
             }
             const senhaCorreta = await bcrypt.compare(
@@ -75,7 +79,7 @@ const usuarioController = {
 
             if (!senhaCorreta) {
                 return res
-                    .status(404)
+                    .status(401)
                     .json({ message: "Email ou senha incorretos" });
             }
 

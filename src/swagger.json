@@ -1,0 +1,135 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API manipulação de portfólio",
+        "description": "Essa API tem como objetivo o cadastro de usuários e manipulação dos seus respectivos portfólio",
+        "termsOfService": "http://localhost:8000/terms",
+        "contact": {
+            "email": "squadfcamara@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/",
+            "description": "API de teste"
+        }
+    ],
+    "paths": {
+        "/usuarios/cadastrar": {
+            "post": {
+                "summary": "Cadastro de usuário",
+                "description": "Essa rota irá realizar o cadastro de usuário no banco de dados",
+                "tags": ["Usuarios"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UsuarioCadastro"
+                            },
+                            "examples": {
+                                "usuario": {
+                                    "value": {
+                                        "nome": "John",
+                                        "sobrenome":"Doe",
+                                        "email": "johndoe@gmail.com",
+                                        "senha_hash": "jonh123@doe"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    },
+                    "400": {
+                        "description": "A senha deve conter pelo menos 6 caracteres"
+                    },
+                    "401": {
+                        "description": "Email já cadastrado no sistema."
+                    },
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            }      
+        },
+        "/usuarios/login": {
+            "post": {
+                "summary": "Login de usuário",
+                "description": "Essa rota irá realizar o login de usuário já cadastrado no banco de dados",
+                "tags": ["Usuarios"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UsuarioLogin"
+                            },
+                            "examples": {
+                                "usuario": {
+                                    "value": {
+                                        "email": "johndoe@gmail.com",
+                                        "senha_hash": "jonh123@doe"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    },    
+                    "401": {
+                        "description": "Email ou senha incorretos"
+                    },
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            } 
+        }
+    },
+    "components": {
+        "schemas": {
+            "UsuarioCadastro": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
+                    },
+                    "sobrenome": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "senha_hash": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UsuarioLogin": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "senha_hash": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+
+}
