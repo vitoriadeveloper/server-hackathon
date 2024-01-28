@@ -1,8 +1,8 @@
 const router = require("express").Router();
 
 const { autenticacao } = require("./middleware/auth");
-const projetosRouter = require("./projetos");
-const usuariosRouter = require("./usuarios");
+const projetosRouter = require("./routes/projetos");
+const usuariosRouter = require("./routes/usuarios");
 
 router.use("/usuarios", usuariosRouter);
 router.use(autenticacao);

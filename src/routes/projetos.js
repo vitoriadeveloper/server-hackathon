@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const projetosController = require("./controllers/projetosController");
+const projetosController = require("../controllers/projetosController");
 
 router
     .route("/cadastrar")
