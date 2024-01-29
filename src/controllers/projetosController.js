@@ -9,31 +9,43 @@ const projetosController = {
                 tags: z.array(z.string()),
                 link: z.string(),
                 descricao: z.string().max(300),
-                imagem_url: z.string(),
             });
-            const { titulo, tags, link, descricao, imagem_url } =
-                projetosSchema.parse(req.body);
+
+            const { titulo, tags, link, descricao } = projetosSchema.parse(
+                req.body,
+            );
             const {
                 0: { _id: idUsuarioLogado },
             } = req.usuarioLogado;
 
-            if (!titulo || !tags || !link || !descricao || !imagem_url) {
+            if (!titulo || !tags || !link || !descricao) {
                 return res
                     .status(400)
                     .json({ message: "Todos os campos são obrigatórios" });
             }
+            if (!req.file) {
+                return res
+                    .status(400)
+                    .json({ message: "Arquivo de imagem obrigatório" });
+            }
 
-            await Projeto.create({
+            const { mimetype, path } = req.file;
+
+            const tagsArray = Object.values(req.body.tags);
+            const projeto = await Projeto.create({
                 usuario_id: idUsuarioLogado,
                 titulo,
-                tags,
+                tags: tagsArray,
                 link,
                 descricao,
-                imagem_url,
+                imagem_url: path,
+                imagem_mimeType: mimetype,
                 createdAt: new Date().toISOString(),
             });
-            return res.status(201).json();
+
+            return res.status(201).json(projeto);
         } catch (error) {
+            console.log(error.message);
             res.status(500).json({
                 message: "Erro interno do servidor.",
             });

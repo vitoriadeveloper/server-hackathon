@@ -26,7 +26,11 @@ const projetoSchema = new Schema(
         },
         imagem_url: {
             type: String,
-            required: true,
+            required: false,
+        },
+        imagem_mimeType: {
+            type: String,
+            required: false,
         },
     },
     { timestamps: true },

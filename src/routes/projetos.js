@@ -1,19 +1,15 @@
 const router = require("express").Router();
-
 const projetosController = require("../controllers/projetosController");
+const upload = require("../../config/multer");
 
 router
     .route("/cadastrar")
-    .post((req, res) => projetosController.create(req, res));
-router.route("/").get((req, res) => projetosController.get(req, res));
-router
-    .route("/meus-projetos")
-    .get((req, res) => projetosController.getMyProjects(req, res));
-router
-    .route("/atualizar-projeto/:id")
-    .put((req, res) => projetosController.put(req, res));
-router
-    .route("/meus-projetos/:id")
-    .delete((req, res) => projetosController.delete(req, res));
+    .post(upload.single("file"), (req, res) =>
+        projetosController.create(req, res),
+    );
+router.route("/").get(projetosController.get);
+router.route("/meus-projetos").get(projetosController.getMyProjects);
+router.route("/atualizar-projeto/:id").put(projetosController.put);
+router.route("/meus-projetos/:id").delete(projetosController.delete);
 
 module.exports = router;

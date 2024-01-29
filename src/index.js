@@ -7,6 +7,8 @@ const app = express();
 const conn = require("./db/conn");
 const swaggerDocs = require("./swagger.json");
 const PORTA = 8000;
+const path = require("path");
+
 conn();
 
 const corsOptions = {
@@ -19,7 +21,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/api", routes);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-
+app.use("/imagens", express.static(path.join(__dirname, "..", "uploads")));
 app.listen(PORTA, () => {
     console.log(`Servidor rodando na porta ${PORTA}`);
 });
