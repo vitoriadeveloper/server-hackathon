@@ -9,7 +9,9 @@ router
     );
 router.route("/").get(projetosController.get);
 router.route("/meus-projetos").get(projetosController.getMyProjects);
-router.route("/atualizar-projeto/:id").put(projetosController.put);
+router
+    .route("/atualizar-projeto/:id")
+    .put(upload.single("file"), (req, res) => projetosController.put(req, res));
 router.route("/meus-projetos/:id").delete(projetosController.delete);
 
 module.exports = router;
