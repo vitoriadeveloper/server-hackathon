@@ -66,6 +66,8 @@ const usuarioController = {
 
             const usuarioEncontrado = await Usuario.findOne({ email });
 
+            console.log(usuarioEncontrado);
+
             if (!usuarioEncontrado) {
                 return res
                     .status(401)
@@ -90,7 +92,15 @@ const usuarioController = {
                 },
             );
 
-            return res.status(200).json({ token });
+            return res.status(200).json({
+                token,
+                usuario: {
+                    id: usuarioEncontrado.id,
+                    nome: usuarioEncontrado.nome,
+                    email: usuarioEncontrado.email,
+                    sobrenome: usuarioEncontrado.sobrenome,
+                },
+            });
         } catch (error) {
             return res.status(500).json({
                 message: "Erro interno do servidor",
