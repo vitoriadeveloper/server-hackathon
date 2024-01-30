@@ -25,7 +25,11 @@ const usuarioController = {
             const { nome, sobrenome, email, senha_hash } = usuarioSchema.parse(
                 req.body,
             );
-
+            if (senha_hash.length < 6) {
+                return res.status(401).json({
+                    message: "A senha deve conter pelo menos 6 caracteres",
+                });
+            }
             const senha = await bcrypt.hash(senha_hash, 10);
             const checarEmail = await Usuario.findOne({ email });
 
@@ -46,7 +50,6 @@ const usuarioController = {
             await Usuario.create(novoUsuario);
             return res.status(201).json();
         } catch (error) {
-            console.log(error);
             return res.status(500).json({
                 message: "Erro interno do servidor",
             });
@@ -65,7 +68,7 @@ const usuarioController = {
 
             if (!usuarioEncontrado) {
                 return res
-                    .status(404)
+                    .status(401)
                     .json({ message: "Email ou senha incorretos" });
             }
             const senhaCorreta = await bcrypt.compare(
@@ -75,7 +78,7 @@ const usuarioController = {
 
             if (!senhaCorreta) {
                 return res
-                    .status(404)
+                    .status(401)
                     .json({ message: "Email ou senha incorretos" });
             }
 
@@ -127,7 +130,6 @@ const usuarioController = {
 
             return res.status(200).json({ token });
         } catch (error) {
-            console.error("Erro ao fazer login com o Google:", error);
             return res.status(500).json({ error: "Erro interno do servidor" });
         }
     },
