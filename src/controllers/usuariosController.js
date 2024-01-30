@@ -26,7 +26,7 @@ const usuarioController = {
                 req.body,
             );
             if (senha_hash.length < 6) {
-                return res.status(401).json({
+                return res.status(400).json({
                     message: "A senha deve conter pelo menos 6 caracteres",
                 });
             }
@@ -35,7 +35,7 @@ const usuarioController = {
 
             if (checarEmail) {
                 return res
-                    .status(400)
+                    .status(401)
                     .json({ message: "Email já cadastrado no sistema." });
             }
             const novoUsuario = new Usuario({
@@ -58,7 +58,7 @@ const usuarioController = {
     login: async (req, res) => {
         const usuarioLoginSchema = z.object({
             email: z.string(),
-            senha_hash: z.string().min(6),
+            senha_hash: z.string(),
         });
 
         try {
@@ -102,7 +102,6 @@ const usuarioController = {
         try {
             const decodedToken = await admin.auth().verifyIdToken(googleToken);
             const { email, sub: googleUserId } = decodedToken;
-            console.log(email, googleUserId);
 
             let usuarioEncontrado = await Usuario.findOne({ email });
 
