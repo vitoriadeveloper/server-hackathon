@@ -18,7 +18,7 @@
     "paths": {
         "/usuarios/cadastrar": {
             "post": {
-                "summary": "Cadastro de usuário",
+                "summary": "Cadastrar de usuário",
                 "description": "Essa rota irá realizar o cadastro de usuário no banco de dados",
                 "tags": ["Usuarios"],
                 "requestBody": {
@@ -58,7 +58,7 @@
         },
         "/usuarios/login": {
             "post": {
-                "summary": "Login de usuário",
+                "summary": "Efetuar login de usuário",
                 "description": "Essa rota irá realizar o login de usuário já cadastrado no banco de dados",
                 "tags": ["Usuarios"],
                 "requestBody": {
@@ -90,6 +90,178 @@
                     }
                 }
             } 
+        },
+        "/usuarios/login/google": {
+            "post": {
+                "summary": "Efetuar login de usuário por meio do Google",
+                "description": "Essa rota irá realizar o login de um usuário por meio do Google, caso o email que o usuário logar com o google já esteja cadastrado na base de dados ele será reconhecido, caso não esteja, o controller fará um cadastro automático para ele.",
+                "tags": ["Usuarios"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UsuarioLoginGoogle"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    },    
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            } 
+        },
+        "/projetos/cadastrar": {
+            "post": {
+                "summary": "Cadastrar de projetos",
+                "description": "Essa rota permite cadastrar novos projetos.",
+                "tags": ["Projetos"],
+                "security": [{"bearerAuth": []}],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CadastrarProjetos"
+                            }                           
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    },    
+                    "502": {
+                        "description": "Erro de autenticação"
+                    },    
+                    "401": {
+                        "description": "Não autorizado"
+                    },    
+                    "400": {
+                        "description": "Todos os campos são obrigatórios"
+                    },    
+                    "403": {
+                        "description": "Usuário não autorizado"
+                    },    
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            } 
+        },
+        "/": {
+            "get": {
+                "summary": "Listar todos os projetos",
+                "description": "Essa rota traz todos os projetos cadastrados na plataforma",
+                "tags": ["Projetos"],
+                "security": [{"bearerAuth": []}],
+                "responses": {
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    },    
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            } 
+        },
+        "/meus-projetos": {
+            "get": {
+                "summary": "Listar meus projetos",
+                "description": "Essa rota lista apenas projetos do usuário logado",
+                "tags": ["Projetos"],
+                "security": [{"bearerAuth": []}],
+                "responses": {
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    },    
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            } 
+        },
+        "/atualizar-projeto/{id}": {
+            "put": {
+                "summary": "Atualizar meu projeto",
+                "description": "Essa rota irá atualizar o projeto mediante o ID do projeto fornecido nos paramêtros da rota",
+                "tags": ["Projetos"],
+                "security": [{"bearerAuth": []}],
+                "parameters":[
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do projeto a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CadastrarProjetos"
+                            }                           
+                        }
+                    }
+                },
+                "responses": {
+                    "500": {
+                        "description": "Erro ao atualizar projeto"
+                    },   
+                    "400": {
+                        "description": "Todos os campos são obrigatórios"
+                    },      
+                    "401": {
+                        "description": "Não autorizado"
+                    },    
+                    "403": {
+                        "description": "Id de produto não fornecido"
+                    },           
+                    "404": {
+                        "description": "Projeto não localizado na base de dados"
+                    },    
+                    "201": {
+                        "description": "Created"
+                    }
+                }
+            } 
+        },
+        "/meus-projetos/{id}": {
+            "delete": {
+                "summary": "Deletar meu projeto",
+                "description": "Essa rota irá deletar o projeto cadastrado.",
+                "tags": ["Projetos"],
+                "security": [{"bearerAuth": []}],
+                "parameters":[
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do projeto a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+            
+                "responses": {
+                    "500": {
+                        "description": "Erro ao exluir projeto."
+                    },    
+                    "403": {
+                        "description": "Você não tem permissão para excluir este projeto"
+                    },            
+                    "200": {
+                        "description": "Ok"
+                    }
+                }
+            } 
         }
     },
     "components": {
@@ -104,7 +276,8 @@
                         "type": "string"
                     },
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "email"
                     },
                     "senha_hash": {
                         "type": "string"
@@ -115,11 +288,41 @@
                 "type": "object",
                 "properties": {
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "email"
                     },
                     "senha_hash": {
                         "type": "string"
                     }
+                }
+            },
+            "UsuarioLoginGoogle": {
+                "type": "object",
+                "properties": {
+                    "googleToken": {
+                        "type": "string"
+                    }                   
+                }
+            },
+            "CadastrarProjetos": {
+                "type": "object",
+                "properties": {
+                    "titulo": {
+                        "type": "string"
+                    },                   
+                    "tags": {
+                        "type": "array"
+                    },                   
+                    "link": {
+                        "type": "string"
+                    },                   
+                    "descricao": {
+                        "type": "string"
+                    },                   
+                    "imagem_url": {
+                        "type": "string",
+                        "format": "binary"
+                    }                 
                 }
             }
         },
@@ -131,5 +334,4 @@
             }
         }
     }
-
 }
