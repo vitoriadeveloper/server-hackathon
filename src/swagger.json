@@ -152,7 +152,7 @@
                 }
             } 
         },
-        "/": {
+        "/projetos/": {
             "get": {
                 "summary": "Listar todos os projetos",
                 "description": "Essa rota traz todos os projetos cadastrados na plataforma",
@@ -168,7 +168,7 @@
                 }
             } 
         },
-        "/meus-projetos": {
+        "/projetos/meus-projetos": {
             "get": {
                 "summary": "Listar meus projetos",
                 "description": "Essa rota lista apenas projetos do usuário logado",
@@ -184,7 +184,7 @@
                 }
             } 
         },
-        "/atualizar-projeto/{id}": {
+        "/projetos/atualizar-projeto/{id}": {
             "put": {
                 "summary": "Atualizar meu projeto",
                 "description": "Essa rota irá atualizar o projeto mediante o ID do projeto fornecido nos paramêtros da rota",
@@ -232,7 +232,7 @@
                 }
             } 
         },
-        "/meus-projetos/{id}": {
+        "/projetos/meus-projetos/{id}": {
             "delete": {
                 "summary": "Deletar meu projeto",
                 "description": "Essa rota irá deletar o projeto cadastrado.",
