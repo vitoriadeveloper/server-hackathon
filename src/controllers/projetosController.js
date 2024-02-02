@@ -108,7 +108,7 @@ const projetosController = {
             const buscarProjeto = await Projeto.find({ _id: projetoId });
 
             if (!buscarProjeto[0]) {
-                return res.status(400).json({
+                return res.status(404).json({
                     message: "Projeto não localizado na base de dados",
                 });
             }
@@ -150,7 +150,7 @@ const projetosController = {
                 idUsuarioLogado.toString()
             ) {
                 return res.status(403).json({
-                    message: "Você não tem permissão para deletar este projeto",
+                    message: "Você não tem permissão para excluir este projeto",
                 });
             }
             const path = buscarProjeto[0].imagem_url;

@@ -16,7 +16,7 @@ const autenticacao = async (req, res, next) => {
             _id: id,
         });
         if (!usuarioLogado) {
-            return res.status(401).json({ message: "Usuário não autorizado" });
+            return res.status(403).json({ message: "Usuário não autorizado" });
         }
         const { senha_hash: _, ...dadosUsuarioLogado } = usuarioLogado;
 
@@ -24,7 +24,7 @@ const autenticacao = async (req, res, next) => {
 
         next();
     } catch (error) {
-        return res.status(500).json({
+        return res.status(502).json({
             message: "Erro de autenticação",
         });
     }
