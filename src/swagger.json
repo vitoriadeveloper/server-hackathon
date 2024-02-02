@@ -13,6 +13,10 @@
         {
             "url": "http://localhost:8000/api/",
             "description": "API de teste"
+        },
+        {
+            "url": "https://fcamaradeploy-api.onrender.com",
+            "description": "API de produção"
         }
     ],
     "paths": {
