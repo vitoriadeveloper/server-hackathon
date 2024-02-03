@@ -1,6 +1,7 @@
 const { z } = require("zod");
 const { Projeto } = require("../models/Projetos");
 const fs = require("fs");
+const Usuario = require("../models/Usuarios");
 
 const projetosController = {
     create: async (req, res) => {
@@ -54,8 +55,20 @@ const projetosController = {
     },
     get: async (req, res) => {
         try {
+            const usuarios = await Usuario.find().select("-senha_hash");
             const listarProjetos = await Projeto.find();
-            return res.status(200).json(listarProjetos);
+            const usuarioPorId = {};
+            usuarios.forEach((usuario) => {
+                usuarioPorId[usuario._id] = usuario;
+            });
+            const projetos = listarProjetos.map((projeto) => {
+                const usuario = usuarioPorId[projeto.usuario_id];
+                return {
+                    ...projeto._doc,
+                    usuario,
+                };
+            });
+            return res.status(200).json(projetos);
         } catch (error) {
             res.status(500).json({
                 message: "Erro interno do servidor.",
