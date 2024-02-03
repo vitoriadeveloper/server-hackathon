@@ -11,18 +11,7 @@ const path = require("path");
 
 conn();
 
-const corsOptions = {
-    origin: [
-        "http://localhost:8000",
-        "http://localhost:5173",
-        "https://fcamaradeploy-api.onrender.com",
-        "https://hackathon-squad-29-front-end.vercel.app/",
-    ],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 app.use("/api", routes);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
