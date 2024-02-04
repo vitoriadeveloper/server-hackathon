@@ -45,7 +45,6 @@ const projetosController = {
 
             return res.status(201).json(projeto);
         } catch (error) {
-            console.log(error.message);
             res.status(500).json({
                 message: "Erro interno do servidor.",
             });
@@ -91,7 +90,7 @@ const projetosController = {
     put: async (req, res) => {
         const projetosSchema = z.object({
             titulo: z.string(),
-            tags: z.array(z.string()),
+            tags: z.string(),
             link: z.string(),
             descricao: z.string().max(300),
         });
@@ -104,7 +103,6 @@ const projetosController = {
         const { titulo, tags, link, descricao } = projetosSchema.parse(
             req.body,
         );
-        const tagsArray = Object.values(req.body.tags);
         if (!projetoId) {
             return res
                 .status(403)
@@ -133,7 +131,7 @@ const projetosController = {
                 {
                     $set: {
                         titulo,
-                        tags: tagsArray,
+                        tags,
                         link,
                         descricao,
                         imagem_url: caminhoImagemAtual,

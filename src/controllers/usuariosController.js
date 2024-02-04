@@ -66,8 +66,6 @@ const usuarioController = {
 
             const usuarioEncontrado = await Usuario.findOne({ email });
 
-            console.log(usuarioEncontrado);
-
             if (!usuarioEncontrado) {
                 return res
                     .status(401)
