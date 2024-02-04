@@ -8,7 +8,7 @@ const projetosController = {
         try {
             const projetosSchema = z.object({
                 titulo: z.string().max(100),
-                tags: z.array(z.string()),
+                tags: z.string(),
                 link: z.string(),
                 descricao: z.string().max(300),
             });
@@ -33,11 +33,12 @@ const projetosController = {
 
             const { mimetype, path } = req.file;
 
-            const tagsArray = Object.values(req.body.tags);
+            // const tagsArray = Object.values(req.body.tags);
+            // TODO tratamento de array
             const projeto = await Projeto.create({
                 usuario_id: idUsuarioLogado,
                 titulo,
-                tags: tagsArray,
+                tags,
                 link,
                 descricao,
                 imagem_url: path,
