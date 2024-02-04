@@ -2,7 +2,6 @@ const { z } = require("zod");
 const { Projeto } = require("../models/Projetos");
 const fs = require("fs");
 const Usuario = require("../models/Usuarios");
-
 const projetosController = {
     create: async (req, res) => {
         try {
@@ -33,8 +32,6 @@ const projetosController = {
 
             const { mimetype, path } = req.file;
 
-            // const tagsArray = Object.values(req.body.tags);
-            // TODO tratamento de array
             const projeto = await Projeto.create({
                 usuario_id: idUsuarioLogado,
                 titulo,
